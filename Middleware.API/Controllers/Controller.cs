@@ -24,7 +24,7 @@ namespace Middleware.API.Controllers
         public IActionResult Register()
         {
             var t = Request.HttpContext.Connection.RemoteIpAddress;
-            return Ok(new { IP = t });
+            return Ok(new { IP = t.ToString() });
         }
 
         [HttpPost("action")]
