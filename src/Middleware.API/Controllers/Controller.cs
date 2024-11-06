@@ -23,8 +23,11 @@ namespace Middleware.API.Controllers
         [HttpGet("register")]
         public IActionResult Register()
         {
-            var t = Request.HttpContext.Connection.RemoteIpAddress;
-            return Ok(new { IP = t.ToString() });
+            return Ok(new
+            {
+                IP = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                Port = Request.HttpContext.Connection.RemotePort.ToString()
+            });
         }
 
         [HttpPost("action")]
