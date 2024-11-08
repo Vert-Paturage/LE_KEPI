@@ -23,7 +23,7 @@ namespace Middleware.API.Controllers
             if (Request.HttpContext.Connection.RemoteIpAddress is null)
                 return BadRequest("Cannot read IP address");
 
-            string ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString().Replace("::1", "localhost");
+            string ipAddress = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString().Replace("0.0.0.1", "localhost");
             string url = $"http{(input.SecureHttp ? "s" : "")}://{ipAddress}:{input.Port}";
 
             HttpResponseMessage response = await _httpClient.GetAsync($"{url}/meuch_map");
