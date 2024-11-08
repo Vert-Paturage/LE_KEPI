@@ -1,28 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
+using Middleware.API.DTO;
+using Middleware.TestApp.Interfaces;
 
-using System.Reflection;
-
-namespace Middleware.Test.Api.Controllers
+namespace Middleware.TestApp.Controllers
 {
-    public class MeuchEndpoint
-    {
-        public required string Key { get; init; }
-        public required string Endpoint { get; init; }
-        public required string Description { get; init; }
-        public required string Type { get; init; }
-        public string? Format { get; init; }
-        public string[]? Param { get; set; }
-    }
-
     [ApiController]
-    [Route("")]
-    public class Controller : ControllerBase
+    [Route("/")]
+    public sealed class Controller : ControllerBase
     {      
-        private readonly ILogger<Controller> _logger;
+        private const int API_PORT = 7204;
+        private const bool API_USE_HTTP_SECURE = true; // True = HTTPS, False = HTTP
 
-        public Controller(ILogger<Controller> logger)
+        private readonly ILogger<Controller> _logger;
+        private readonly IErpMiddleware _middleware;
+
+        public Controller(ILogger<Controller> logger, IErpMiddleware middleware)
         {
             _logger = logger;
+            _middleware = middleware;
+        }
+
+        [HttpGet("start")]
+        public async Task<IActionResult> Start()
+        {
+            try
+            {
+                ErpRegisterReponse reponse = await _middleware.CallRegisterMethodAsync(API_USE_HTTP_SECURE, API_PORT);
+                return Ok(reponse);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
         }
 
         [HttpGet("meuch_map")]
@@ -38,7 +47,14 @@ namespace Middleware.Test.Api.Controllers
                     Type = "GET",
                     Format = "/{id}/{type}",
                     Param = ["date"]
-                }                
+                },
+                new MeuchEndpoint()
+                {
+                    Key = "VAK_RSB_2",
+                    Endpoint = "/vak_end_2",
+                    Description = "Get Vak RSB (mais en mieux)",
+                    Type = "POST"                    
+                }
             };
             return Ok(endpoints);
         }
@@ -48,6 +64,13 @@ namespace Middleware.Test.Api.Controllers
         public IActionResult GetVakEnd(int id, string type, string date)
         {
             return Ok("Hello from the other side (Vakend)");
-        }      
+        }
+
+        [HttpPost("vak_end_2")]
+        public IActionResult GetVakEnd2()
+        {
+            return Ok("Hello from the other side (Vakend 2)");
+        }
+
     }
 }

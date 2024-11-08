@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Middleware.API\Middleware.API.csproj" />
+  </ItemGroup>
+
 </Project>

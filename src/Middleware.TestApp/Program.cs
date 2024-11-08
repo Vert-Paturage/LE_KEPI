@@ -24,14 +24,9 @@ namespace Middleware.Test.Api
             app.UseAuthorization();
             
             app.MapControllers();
-            
-            app.Services.GetService<IErpMiddleware>()
-               .CallRegisterMethodAsync()
-               .ConfigureAwait(false);
 
             app.Run();
-            
-          
+
         }
     }
 }

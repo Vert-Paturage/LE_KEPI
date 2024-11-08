@@ -10,6 +10,8 @@ namespace Middleware.API
 
             builder.Services.AddControllers();
 
+            builder.Services.AddHttpClient();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

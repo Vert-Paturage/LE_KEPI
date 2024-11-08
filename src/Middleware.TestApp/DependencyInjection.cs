@@ -3,7 +3,7 @@ using Middleware.TestApp.Middleware;
 
 namespace Middleware.TestApp;
 
-public static class DependencyInjection
+internal static class DependencyInjection
 {
     public static void AddDependencies(this IServiceCollection services, string middlewareUrl)
     {
@@ -13,6 +13,6 @@ public static class DependencyInjection
             options.MiddlewareUrl = middlewareUrl;
         });
         
-        services.AddHttpClient<IErpMiddleware, ErpMiddleware>();
+        services.AddScoped<IErpMiddleware, ErpMiddleware>();
     }
 }
