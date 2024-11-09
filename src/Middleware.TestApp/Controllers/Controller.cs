@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+
 using Middleware.API.DTO;
 using Middleware.TestApp.Interfaces;
 
@@ -7,17 +8,16 @@ namespace Middleware.TestApp.Controllers
     [ApiController]
     [Route("/")]
     public sealed class Controller : ControllerBase
-    {      
-        private const int API_PORT = 7204;
-        private const bool API_USE_HTTP_SECURE = true; // True = HTTPS, False = HTTP
-
+    {
         private readonly ILogger<Controller> _logger;
         private readonly IErpMiddleware _middleware;
+        private readonly string _apiUrl;
 
-        public Controller(ILogger<Controller> logger, IErpMiddleware middleware)
+        public Controller(ILogger<Controller> logger, IErpMiddleware middleware, IConfiguration configuration)
         {
             _logger = logger;
             _middleware = middleware;
+            _apiUrl = configuration.GetValue<string>("ApiUrl")!;
         }
 
         [HttpGet("start")]
@@ -25,13 +25,13 @@ namespace Middleware.TestApp.Controllers
         {
             try
             {
-                ErpRegisterReponse reponse = await _middleware.CallRegisterMethodAsync(API_USE_HTTP_SECURE, API_PORT);
+                ErpRegisterReponse reponse = await _middleware.CallRegisterMethodAsync(_apiUrl);
                 return Ok(reponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }            
+            }
         }
 
         [HttpGet("meuch_map")]
@@ -53,7 +53,14 @@ namespace Middleware.TestApp.Controllers
                     Key = "VAK_RSB_2",
                     Endpoint = "/vak_end_2",
                     Description = "Get Vak RSB (mais en mieux)",
-                    Type = "POST"                    
+                    Type = "POST"
+                },
+                new MeuchEndpoint()
+                {
+                    Key = "VAK_RSB_3",
+                    Endpoint = "/vak_end_3",
+                    Description = "Get Vak RSB (mais en encore mieux)",
+                    Type = "PATCH"
                 }
             };
             return Ok(endpoints);

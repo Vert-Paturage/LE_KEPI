@@ -1,7 +1,6 @@
 using Middleware.TestApp;
-using Middleware.TestApp.Interfaces;
 
-namespace Middleware.Test.Api
+namespace Middleware.TestApp
 {
     public class Program
     {
@@ -19,7 +18,7 @@ namespace Middleware.Test.Api
 
             // Configure the HTTP request pipeline.
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
             

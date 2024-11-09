@@ -2,6 +2,5 @@
 
 public class RegisterInput
 {
-    public bool SecureHttp { get; set; }
-    public int Port { get; set; }
+    public string Url { get; set; } = string.Empty;
 }

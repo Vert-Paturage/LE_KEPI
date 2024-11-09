@@ -21,18 +21,17 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
     private readonly string _middlewareUrl = options.Value.MiddlewareUrl;
 
-    public async Task<ErpRegisterReponse> CallRegisterMethodAsync(bool useSecureHttp, int apiPort)
+    public async Task<ErpRegisterReponse> CallRegisterMethodAsync(string apiUrl)
     {
         string url = $"{_middlewareUrl}{REGISTER_ENDPOINT}";
         HttpContent content = new StringContent(JsonConvert.SerializeObject(new
         {
-            secureHttp = useSecureHttp,
-            port = 7204
+            url = apiUrl
         }), Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _httpClient.PostAsync(url, content);
         string responseBody = await response.Content.ReadAsStringAsync();
-        if(!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
             throw new Exception(responseBody);
         return JsonConvert.DeserializeObject<ErpRegisterReponse>(responseBody)!;
     }

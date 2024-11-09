@@ -9,5 +9,5 @@ services:
     ports:
       - 5001:8001      
     environment:
-      - ASPNETCORE_HTTP_PORTS=8001         
+      - ASPNETCORE_HTTP_PORTS=8001
         

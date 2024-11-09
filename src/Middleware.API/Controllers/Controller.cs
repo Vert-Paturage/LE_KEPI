@@ -14,24 +14,18 @@ namespace Middleware.API.Controllers
         public Controller(ILogger<Controller> logger, IHttpClientFactory clientFactory)
         {
             _logger = logger;
-            _httpClient = clientFactory.CreateClient();
+            _httpClient = clientFactory.CreateClient("HttpClient");
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterInput input)
         {
-            if (Request.HttpContext.Connection.RemoteIpAddress is null)
-                return BadRequest("Cannot read IP address");
-
-            string ipAddress = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString().Replace("0.0.0.1", "localhost");
-            string url = $"http{(input.SecureHttp ? "s" : "")}://{ipAddress}:{input.Port}";
-
-            HttpResponseMessage response = await _httpClient.GetAsync($"{url}/meuch_map");
+            HttpResponseMessage response = await _httpClient.GetAsync($"{input.Url}/meuch_map");
 
             if (!response.IsSuccessStatusCode)
-                return BadRequest($"Error when calling {url}");
+                return BadRequest($"Error when calling {input.Url}/meuch_map");
 
-            var responseBody = await response.Content.ReadAsStringAsync();
+            string responseBody = await response.Content.ReadAsStringAsync();
             List<MeuchEndpoint>? endpoints = JsonConvert.DeserializeObject<List<MeuchEndpoint>>(responseBody);
             if (endpoints is null)
                 return BadRequest($"Invalid Endpoints format on meuch_map route");

@@ -6,11 +6,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7100"
+      "applicationUrl": "https://0.0.0.0:7100;http://0.0.0.0:7101"
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
