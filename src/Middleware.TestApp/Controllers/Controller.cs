@@ -10,14 +10,12 @@ namespace Middleware.TestApp.Controllers
     public sealed class Controller : ControllerBase
     {
         private readonly ILogger<Controller> _logger;
-        private readonly IErpMiddleware _middleware;
-        private readonly string _apiUrl;
+        private readonly IErpMiddleware _middleware;        
 
         public Controller(ILogger<Controller> logger, IErpMiddleware middleware, IConfiguration configuration)
         {
             _logger = logger;
-            _middleware = middleware;
-            _apiUrl = configuration.GetValue<string>("ApiUrl")!;
+            _middleware = middleware;            
         }
 
         [HttpGet("start")]
@@ -25,7 +23,7 @@ namespace Middleware.TestApp.Controllers
         {
             try
             {
-                ErpRegisterReponse reponse = await _middleware.CallRegisterMethodAsync(_apiUrl);
+                ErpRegisterReponse reponse = await _middleware.CallRegisterMethodAsync();
                 return Ok(reponse);
             }
             catch (Exception ex)
@@ -37,9 +35,9 @@ namespace Middleware.TestApp.Controllers
         [HttpGet("meuch_map")]
         public IActionResult GetMeuch()
         {
-            List<MeuchEndpoint> endpoints = new List<MeuchEndpoint>()
+            List<MeuchEndpointInput> endpoints = new List<MeuchEndpointInput>()
             {
-                new MeuchEndpoint()
+                new MeuchEndpointInput()
                 {
                     Key = "VAK_RSB",
                     Endpoint = "/vak_end",
@@ -48,14 +46,14 @@ namespace Middleware.TestApp.Controllers
                     Format = "/{id}/{type}",
                     Param = ["date"]
                 },
-                new MeuchEndpoint()
+                new MeuchEndpointInput()
                 {
                     Key = "VAK_RSB_2",
                     Endpoint = "/vak_end_2",
                     Description = "Get Vak RSB (mais en mieux)",
                     Type = "POST"
                 },
-                new MeuchEndpoint()
+                new MeuchEndpointInput()
                 {
                     Key = "VAK_RSB_3",
                     Endpoint = "/vak_end_3",

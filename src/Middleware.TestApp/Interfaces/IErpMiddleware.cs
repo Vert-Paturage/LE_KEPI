@@ -7,5 +7,5 @@ public sealed record ErpRegisterReponse
 
 public interface IErpMiddleware
 {
-    Task<ErpRegisterReponse> CallRegisterMethodAsync(string apiUrl);
+    Task<ErpRegisterReponse> CallRegisterMethodAsync();
 }

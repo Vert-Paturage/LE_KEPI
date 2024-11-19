@@ -12,7 +12,7 @@ namespace Middleware.TestApp
 
             builder.Services.AddControllers();
             
-            builder.Services.AddDependencies(builder.Configuration["MiddlewareUrl"]!);
+            builder.Services.AddDependencies(builder.Configuration);
 
             var app = builder.Build();
 

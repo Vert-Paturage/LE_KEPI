@@ -1,3 +1,6 @@
+using Middleware.API.Cache;
+using Middleware.API.Interfaces;
+
 namespace Middleware.API;
 
 public static class DependencyInjection
@@ -13,5 +16,7 @@ public static class DependencyInjection
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 }
             );
+        
+        services.AddSingleton<IEndpointCache, EndpointCache>();
     }
 }

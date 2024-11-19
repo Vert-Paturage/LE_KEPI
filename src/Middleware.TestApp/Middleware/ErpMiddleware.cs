@@ -11,6 +11,8 @@ namespace Middleware.TestApp.Middleware;
 internal sealed record ErpMiddlewareOptions
 {
     public string MiddlewareUrl { get; set; } = string.Empty;
+    public string AppKey { get; set; } = string.Empty;
+    public string ApiUrl { get; set; } = string.Empty;
 }
 
 internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHttpClientFactory httpClientFactory)
@@ -20,13 +22,16 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
 
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
     private readonly string _middlewareUrl = options.Value.MiddlewareUrl;
+    private readonly string _appKey = options.Value.AppKey;
+    private readonly string _apiUrl = options.Value.ApiUrl;
 
-    public async Task<ErpRegisterReponse> CallRegisterMethodAsync(string apiUrl)
+    public async Task<ErpRegisterReponse> CallRegisterMethodAsync()
     {
         string url = $"{_middlewareUrl}{REGISTER_ENDPOINT}";
         HttpContent content = new StringContent(JsonConvert.SerializeObject(new
         {
-            url = apiUrl
+            appKey = _appKey,
+            url = _apiUrl
         }), Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _httpClient.PostAsync(url, content);
