@@ -10,4 +10,9 @@ public sealed class AppData
         Key = key;
         ApiUrl = apiUrl;
     }
+
+    public override string ToString()
+    {
+        return $"Key : {Key} - ApiUrl : {ApiUrl}";
+    }
 }

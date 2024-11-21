@@ -51,4 +51,9 @@ public sealed class EndpointCache : IEndpointCache
     {
         return Task.FromResult(_cache.Values.Select(endpoint => endpoint));
     }
+
+    public Task<IEnumerable<AppData>> GetRegisteredAppsAsync()
+    {
+        return Task.FromResult(_cache.Values.Select(endpoint => endpoint.App).Distinct());
+    }
 }

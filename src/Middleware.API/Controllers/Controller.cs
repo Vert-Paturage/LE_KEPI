@@ -1,4 +1,6 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Middleware.API.DTO;
 using Middleware.API.Interfaces;
 using Middleware.API.Objects;
@@ -47,9 +49,27 @@ namespace Middleware.API.Controllers
         }
 
         [HttpGet("my_swag")]
-        public IActionResult MySwag()
+        public async Task<IActionResult> MySwag()
         {
-            return Ok("<html><h1>Hello Paul</h1></html>");
+            StringBuilder htmlStringBuilder = new StringBuilder();
+            htmlStringBuilder.Append("<html>");
+            IEnumerable<AppData> apps = await _endpointCache.GetRegisteredAppsAsync();
+            foreach (AppData app in apps)
+            {
+                htmlStringBuilder.Append($"<h1>{app}</h1>");
+                IEnumerable<AppEndpoint> endpoints = await _endpointCache.GetAppEndpointsAsync(app.Key);
+                htmlStringBuilder.Append("<ul>");
+                foreach (AppEndpoint endpoint in endpoints)
+                {
+                    htmlStringBuilder.Append($"<li>{endpoint}</li>");
+                }
+                htmlStringBuilder.Append("</ul>");
+            }
+            htmlStringBuilder.Append("</html>");
+
+            string result = htmlStringBuilder.ToString();
+            htmlStringBuilder.Clear();
+            return Ok(result);
         }
     }
 }

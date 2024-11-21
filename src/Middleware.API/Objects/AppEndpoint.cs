@@ -32,4 +32,9 @@ public sealed class AppEndpoint
         Format = format;
         Param = param;
     }
+
+    public override string ToString()
+    {
+        return $"- Key : {Key}\n- Endpoint : {Endpoint}\n- Description : {Description}\n- Type : {Type}\n- Format : {Format}\n- Param : {Param}";
+    }
 }

@@ -12,4 +12,5 @@ public interface IEndpointCache
     Task<AppEndpoint> GetEndpointAsync(string key);
     Task<IEnumerable<AppEndpoint>> GetAppEndpointsAsync(string appKey);
     Task<IEnumerable<AppEndpoint>> GetEndpointsAsync();
+    Task<IEnumerable<AppData>> GetRegisteredAppsAsync();
 }
