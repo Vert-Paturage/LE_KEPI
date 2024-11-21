@@ -7,7 +7,7 @@ public sealed class AppData
 
     public AppData(string key, string apiUrl)
     {
-        Key = key;
+        Key = key.ToUpper();
         ApiUrl = apiUrl;
     }
 

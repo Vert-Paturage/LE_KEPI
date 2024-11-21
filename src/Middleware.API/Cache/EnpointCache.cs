@@ -37,9 +37,10 @@ public sealed class EndpointCache : IEndpointCache
         }
     }
 
-    public Task<AppEndpoint> GetEndpointAsync(string key)
+    public Task<AppEndpoint?> GetEndpointAsync(string key)
     {
-        return Task.FromResult(_cache[key]);
+        _cache.TryGetValue(key, out AppEndpoint? endpoint);
+        return Task.FromResult(endpoint);
     }
 
     public Task<IEnumerable<AppEndpoint>> GetAppEndpointsAsync(string appKey)

@@ -8,4 +8,5 @@ public sealed record ErpRegisterReponse
 public interface IErpMiddleware
 {
     Task<ErpRegisterReponse> CallRegisterMethodAsync();
+    Task<string> SendActionAsync(string actionKey, Dictionary<string, object> data);
 }

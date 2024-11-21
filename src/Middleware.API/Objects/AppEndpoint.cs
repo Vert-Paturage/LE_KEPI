@@ -15,26 +15,19 @@ public sealed class AppEndpoint
     public AppEndpoint(AppData app, MeuchEndpointInput endpoint)
     {
         App = app;
-        Key = endpoint.Key;
+        Key = endpoint.Key.ToUpper();
         Endpoint = endpoint.Endpoint;
         Description = endpoint.Description;
-        Type = endpoint.Type;
+        Type = endpoint.Type.ToUpper();
         Format = endpoint.Format;
         Param = endpoint.Param;
     }
 
-    public AppEndpoint(AppData app, string key, string desc, string type, string? format, string[]? param)
-    {
-        App = app;
-        Key = key;
-        Description = desc;
-        Type = type;
-        Format = format;
-        Param = param;
-    }
-
     public override string ToString()
     {
-        return $"- Key : {Key}\n- Endpoint : {Endpoint}\n- Description : {Description}\n- Type : {Type}\n- Format : {Format}\n- Param : {Param}";
+        string param = "null";
+        if (Param is not null)
+            param = $"[{string.Join(',',Param?.Select(v=>v))}]";
+        return $"- Key : {Key}\n- Endpoint : {Endpoint}\n- Description : {Description}\n- Type : {Type}\n- Format : {Format}\n- Param : {param}";
     }
 }

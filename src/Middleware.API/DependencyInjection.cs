@@ -1,4 +1,5 @@
 using Middleware.API.Cache;
+using Middleware.API.EndpointClient;
 using Middleware.API.Interfaces;
 
 namespace Middleware.API;
@@ -18,5 +19,6 @@ public static class DependencyInjection
             );
         
         services.AddSingleton<IEndpointCache, EndpointCache>();
+        services.AddScoped<IEndpointHttpClient, EndpointHttpClient>();
     }
 }

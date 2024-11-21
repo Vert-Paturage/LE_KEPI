@@ -19,6 +19,7 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
     : IErpMiddleware
 {
     private const string REGISTER_ENDPOINT = "/register";
+    private const string ACTION_ENDPOINT = "/action";
 
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
     private readonly string _middlewareUrl = options.Value.MiddlewareUrl;
@@ -39,5 +40,21 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
         if (!response.IsSuccessStatusCode)
             throw new Exception(responseBody);
         return JsonConvert.DeserializeObject<ErpRegisterReponse>(responseBody)!;
+    }
+
+    public async Task<string> SendActionAsync(string actionKey, Dictionary<string, object> data)
+    {
+        string url = $"{_middlewareUrl}{ACTION_ENDPOINT}";
+        HttpContent content = new StringContent(JsonConvert.SerializeObject(new
+        {
+            key = actionKey,
+            data = data
+        }), Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+        string responseBody = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception(responseBody);
+        return responseBody;
     }
 }

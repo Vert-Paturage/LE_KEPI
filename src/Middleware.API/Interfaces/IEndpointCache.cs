@@ -9,7 +9,7 @@ public interface IEndpointCache
     Task AddEndpointsAsync(IEnumerable<AppEndpoint> endpoints);
     Task RemoveEndpointAsync(string key);
     Task RemoveAppEndpointsAsync(string appKey);
-    Task<AppEndpoint> GetEndpointAsync(string key);
+    Task<AppEndpoint?> GetEndpointAsync(string key);
     Task<IEnumerable<AppEndpoint>> GetAppEndpointsAsync(string appKey);
     Task<IEnumerable<AppEndpoint>> GetEndpointsAsync();
     Task<IEnumerable<AppData>> GetRegisteredAppsAsync();

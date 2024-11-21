@@ -10,12 +10,12 @@ namespace Middleware.TestApp.Controllers
     public sealed class Controller : ControllerBase
     {
         private readonly ILogger<Controller> _logger;
-        private readonly IErpMiddleware _middleware;        
+        private readonly IErpMiddleware _middleware;
 
         public Controller(ILogger<Controller> logger, IErpMiddleware middleware, IConfiguration configuration)
         {
             _logger = logger;
-            _middleware = middleware;            
+            _middleware = middleware;
         }
 
         [HttpGet("start")]
@@ -32,6 +32,23 @@ namespace Middleware.TestApp.Controllers
             }
         }
 
+        [HttpGet("send_action")]
+        public async Task<IActionResult> SendAction()
+        {
+            try
+            {
+                string response = await _middleware.SendActionAsync("VAK_CALL_BACK", new Dictionary<string, object>
+                {
+                    { "Random" , new Random().Next(1, 100) }
+                });
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("meuch_map")]
         public IActionResult GetMeuch()
         {
@@ -39,26 +56,34 @@ namespace Middleware.TestApp.Controllers
             {
                 new MeuchEndpointInput()
                 {
-                    Key = "VAK_RSB",
+                    Key = "vak_rsb",
                     Endpoint = "/vak_end",
                     Description = "Get Vak RSB",
-                    Type = "GET",
-                    Format = "/{id}/{type}",
+                    Type = "get",
+                    Format = "/id/type",
                     Param = ["date"]
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "VAK_RSB_2",
+                    Key = "vak_rsb_2",
                     Endpoint = "/vak_end_2",
                     Description = "Get Vak RSB (mais en mieux)",
-                    Type = "POST"
+                    Type = "pOst"
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "VAK_RSB_3",
+                    Key = "vaK_RSb_3",
                     Endpoint = "/vak_end_3",
                     Description = "Get Vak RSB (mais en encore mieux)",
-                    Type = "PATCH"
+                    Type = "PaTcH"
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "VAK_CALL_BACK",
+                    Endpoint = "/vak_call_back",
+                    Description = "Callback pour test",
+                    Type = "GET",
+                    Param = ["random"]
                 }
             };
             return Ok(endpoints);
@@ -68,13 +93,19 @@ namespace Middleware.TestApp.Controllers
         [HttpGet("vak_end/{id}/{type}")]
         public IActionResult GetVakEnd(int id, string type, string date)
         {
-            return Ok("Hello from the other side (Vakend)");
+            return Ok($"Hello from the other side (Vakend) {id}/{type} date={date}");
         }
 
         [HttpPost("vak_end_2")]
         public IActionResult GetVakEnd2()
         {
             return Ok("Hello from the other side (Vakend 2)");
+        }
+
+        [HttpGet("vak_call_back")]
+        public IActionResult GetVakCallBack(int random)
+        {
+            return Ok($"Random={random}");
         }
 
     }

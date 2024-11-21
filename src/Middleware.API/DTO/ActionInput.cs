@@ -1,7 +1,7 @@
 ﻿namespace Middleware.API.DTO;
 
-public class ActionInput
+public sealed class ActionInput
 {
     public string Key { get; set; } = string.Empty;
-    public object Input { get; set; } = new();
+    public Dictionary<string, object> Data { get; set; } = new();
 }

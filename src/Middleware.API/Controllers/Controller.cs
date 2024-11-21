@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -15,12 +16,18 @@ namespace Middleware.API.Controllers
         private readonly ILogger<Controller> _logger;
         private readonly HttpClient _httpClient;
         private readonly IEndpointCache _endpointCache;
+        private readonly IEndpointHttpClient _endpointHttpClient;
 
-        public Controller(ILogger<Controller> logger, IHttpClientFactory clientFactory, IEndpointCache endpointCache)
+        public Controller(
+            ILogger<Controller> logger,
+            IHttpClientFactory clientFactory,
+            IEndpointCache endpointCache,
+            IEndpointHttpClient endpointHttpClient)
         {
             _logger = logger;
             _httpClient = clientFactory.CreateClient("HttpClient");
             _endpointCache = endpointCache;
+            _endpointHttpClient = endpointHttpClient;
         }
 
         [HttpPost("register")]
@@ -36,16 +43,24 @@ namespace Middleware.API.Controllers
             if (endpoints is null)
                 return BadRequest($"Invalid Endpoints format on meuch_map route");
             AppData appData = new AppData(input.AppKey, input.Url);
-            await _endpointCache.RemoveAppEndpointsAsync(input.AppKey);
+            
+            await _endpointCache.RemoveAppEndpointsAsync(appData.Key);
             await _endpointCache.AddEndpointsAsync(endpoints.Select(endpoint => new AppEndpoint(appData, endpoint)));
 
             return Ok(new RegisterOutput(endpoints.Select(endpoint => endpoint.Key).ToArray()));
         }
 
         [HttpPost("action")]
-        public IActionResult Action([FromBody] ActionInput input)
+        public async Task<IActionResult> Action([FromBody] ActionInput input)
         {
-            return Ok(input);
+            string key = input.Key.ToUpper();
+            AppEndpoint? endpoint = await _endpointCache.GetEndpointAsync(key);
+            if (endpoint is null)
+                return BadRequest($"Endpoint with key {input.Key} not found");
+            
+            string test = await _endpointHttpClient.CallEndpoint(endpoint,input.Data);
+
+            return Ok(test);
         }
 
         [HttpGet("my_swag")]
