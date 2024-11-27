@@ -30,7 +30,7 @@ Chaque application qui souhaite fonctionner avec le middleware doit respecter ce
 Le middleware propose 3 endpoints :
 
 - `register` : permet à une application de s'enregistrer auprès du middleware.
-```json
+```js
 {
   "appKey": "APP1", // identifiant unique de chaque application
   "url": "https://ip_application:port" // URL de l'application
@@ -38,7 +38,7 @@ Le middleware propose 3 endpoints :
 ```
 
 - `action` : permet à une application de demander au middleware d'exécuter une action.
-```json
+```js
 {
   "key": "APP1_GET_ALL_USERS", // code de l'action
   "params": {
@@ -56,7 +56,7 @@ Pour cela, elle doit fournir un endpoint `meuch_map` à la racine (exemple : htt
 retourne la liste des actions qu'elle propose.
 
 Chaque action dans la réponse de l'endpoint doit suivre la structure suivante :
-```json
+```js
 {
   "key": "APP1_GET_TEST", // code de l'action
   "endpoint" : "/test_endpoint", // endpoint de l'action depuis la racine
