@@ -62,8 +62,9 @@ Chaque action dans la réponse de l'endpoint doit suivre la structure suivante :
   "endpoint" : "/test_endpoint", // endpoint de l'action depuis la racine
   "description" : "Endpoint de test", // petite description qui sera utilisée pour la documentation
   "type" : "GET", // type de la requête HTTP
-  "format" : "/id/type" | null, // paramètres dans l'URL
-  "param" : "[date]" | null // query params
+  "routeFormat" : "/id/type" | null, // paramètres dans l'URL
+  "queryParams" : "[date]" | null, // query params
+  "body" : "{}" | null // structure du body
 }
 ```
 
@@ -89,8 +90,8 @@ public IActionResult GetMeuch()
             Endpoint = "/test_endpoint",
             Description = "Endpoint de test",
             Type = "GET",
-            Format = "/id/type",
-            Param = ["date"]
+            RouteFormat = "/id/type",
+            QueryParams = ["date"]
         },
         new MeuchEndpointInput()
         {
