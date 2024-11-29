@@ -49,6 +49,50 @@ namespace Middleware.TestApp.Controllers
             }
         }
 
+        [HttpGet("send_action_2")]
+        public async Task<IActionResult> SendAction2()
+        {
+            try
+            {
+                string response = await _middleware.SendActionAsync("VAK_CALL_BACK_2", [], new VakCallBack2Input()
+                {
+                    Number1 = 2,
+                    Number2 = 2,
+                    Operation = VakCallBackOperation.Plus
+                });
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("send_action_3")]
+        public async Task<IActionResult> SendAction3()
+        {
+            try
+            {
+                string response = await _middleware.SendActionAsync("VAK_CALL_BACK_3", 
+                    new Dictionary<string, object>() {
+                        { "Number1", 5 },
+                        { "Number2", 5 },
+                        { "Operation", VakCallBackOperation.Multiply }
+                    }, 
+                    new VakCallBack2Input()
+                    {
+                        Number1 = 2,
+                        Number2 = 2,
+                        Operation = VakCallBackOperation.Plus
+                    });
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("meuch_map")]
         public IActionResult GetMeuch()
         {
@@ -84,6 +128,22 @@ namespace Middleware.TestApp.Controllers
                     Description = "Callback pour test",
                     Type = "GET",
                     Param = ["random"]
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "VAK_CALL_BACK_2",
+                    Endpoint = "/vak_call_back_2",
+                    Description = "Callback pour test v2",
+                    Type = "POST"
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "VAK_CALL_BACK_3",
+                    Endpoint = "/vak_call_back_3",
+                    Description = "Callback pour test v3",
+                    Type = "PATCH",
+                    Format = "/number1/number2",
+                    Param = ["operation"]
                 }
             };
             return Ok(endpoints);
@@ -108,5 +168,44 @@ namespace Middleware.TestApp.Controllers
             return Ok($"Random={random}");
         }
 
+
+        public sealed class VakCallBack2Input
+        {
+            public int Number1 { get; set; }
+            public int Number2 { get; set; }
+            public VakCallBackOperation Operation { get; set; }
+        }
+
+        public enum VakCallBackOperation
+        {
+            Plus,
+            Minus,
+            Multiply,
+            Divide
+        }
+
+        [HttpPost("vak_call_back_2")]
+        public IActionResult GetVakCallBack2([FromBody] VakCallBack2Input input)
+        {
+            return Ok(Compute(input.Number1, input.Number2, input.Operation));
+        }
+
+        [HttpPatch("vak_call_back_3/{number1}/{number2}")]
+        public IActionResult GetVakCallBack3(int number1, int number2, VakCallBackOperation operation, [FromBody] VakCallBack2Input input)
+        {
+            return Ok($"Route Values : {Compute(number1, number2, operation)} \nBody Values : {Compute(input.Number1, input.Number2, input.Operation)}");
+        }
+
+        private string Compute(int number1, int number2, VakCallBackOperation operation)
+        {
+            return operation switch
+            {
+                VakCallBackOperation.Plus => $"{number1} + {number2} = {number1 + number2}",
+                VakCallBackOperation.Minus => $"{number1} - {number2} = {number1 - number2}",
+                VakCallBackOperation.Multiply => $"{number1} * {number2} = {number1 * number2}",
+                VakCallBackOperation.Divide => $"{number1} / {number2} = {number1 / number2}",
+                _ => "Invalid operation",
+            };
+        }
     }
 }

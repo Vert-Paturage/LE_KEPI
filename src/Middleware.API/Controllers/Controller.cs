@@ -1,11 +1,8 @@
-using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Middleware.API.DTO;
+using Middleware.API.EndpointClient;
 using Middleware.API.Interfaces;
-using Middleware.API.Objects;
-using Newtonsoft.Json;
 
 namespace Middleware.API.Controllers
 {
@@ -13,19 +10,13 @@ namespace Middleware.API.Controllers
     [Route("/")]
     public class Controller : ControllerBase
     {
-        private readonly ILogger<Controller> _logger;
-        private readonly HttpClient _httpClient;
         private readonly IEndpointCache _endpointCache;
         private readonly IEndpointHttpClient _endpointHttpClient;
 
         public Controller(
-            ILogger<Controller> logger,
-            IHttpClientFactory clientFactory,
             IEndpointCache endpointCache,
             IEndpointHttpClient endpointHttpClient)
         {
-            _logger = logger;
-            _httpClient = clientFactory.CreateClient("HttpClient");
             _endpointCache = endpointCache;
             _endpointHttpClient = endpointHttpClient;
         }
@@ -33,21 +24,14 @@ namespace Middleware.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterInput input)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync($"{input.Url}/meuch_map");
-
-            if (!response.IsSuccessStatusCode)
-                return BadRequest($"Error when calling {input.Url}/meuch_map");
-            string responseBody = await response.Content.ReadAsStringAsync();
-            List<MeuchEndpointInput>? endpoints = JsonConvert.DeserializeObject<List<MeuchEndpointInput>>(responseBody);
-
-            if (endpoints is null)
-                return BadRequest($"Invalid Endpoints format on meuch_map route");
             AppData appData = new AppData(input.AppKey, input.Url);
             
+            List<AppEndpoint> endpoints = await _endpointHttpClient.CallMeuchMapEndpoint(appData);
+            
             await _endpointCache.RemoveAppEndpointsAsync(appData.Key);
-            await _endpointCache.AddEndpointsAsync(endpoints.Select(endpoint => new AppEndpoint(appData, endpoint)));
+            await _endpointCache.AddEndpointsAsync(endpoints);
 
-            return Ok(new RegisterOutput(endpoints.Select(endpoint => endpoint.Key).ToArray()));
+            return Ok(new { Actions = endpoints.Select(endpoint => endpoint.Key).ToArray()} );
         }
 
         [HttpPost("action")]
@@ -58,9 +42,9 @@ namespace Middleware.API.Controllers
             if (endpoint is null)
                 return BadRequest($"Endpoint with key {input.Key} not found");
             
-            string test = await _endpointHttpClient.CallEndpoint(endpoint,input.Data);
+            input.Params ??= new Dictionary<string, object>();
 
-            return Ok(test);
+            return Ok(await _endpointHttpClient.CallEndpoint(endpoint,input.Params, input.Body));
         }
 
         [HttpGet("my_swag")]

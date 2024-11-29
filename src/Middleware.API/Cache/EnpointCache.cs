@@ -1,5 +1,5 @@
+using Middleware.API.EndpointClient;
 using Middleware.API.Interfaces;
-using Middleware.API.Objects;
 
 namespace Middleware.API.Cache;
 

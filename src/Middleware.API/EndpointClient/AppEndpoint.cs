@@ -1,6 +1,6 @@
 using Middleware.API.DTO;
 
-namespace Middleware.API.Objects;
+namespace Middleware.API.EndpointClient;
 
 public sealed class AppEndpoint
 {

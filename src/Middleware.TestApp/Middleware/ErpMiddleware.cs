@@ -42,13 +42,14 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
         return JsonConvert.DeserializeObject<ErpRegisterReponse>(responseBody)!;
     }
 
-    public async Task<string> SendActionAsync(string actionKey, Dictionary<string, object> data)
+    public async Task<string> SendActionAsync(string actionKey, Dictionary<string, object>? data=null, object? body = null)
     {
         string url = $"{_middlewareUrl}{ACTION_ENDPOINT}";
         HttpContent content = new StringContent(JsonConvert.SerializeObject(new
         {
-            key = actionKey,
-            data = data
+            Key = actionKey,
+            Params = data,
+            Body = body
         }), Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _httpClient.PostAsync(url, content);

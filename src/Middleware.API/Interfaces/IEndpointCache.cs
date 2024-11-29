@@ -1,5 +1,4 @@
-using Middleware.API.DTO;
-using Middleware.API.Objects;
+using Middleware.API.EndpointClient;
 
 namespace Middleware.API.Interfaces;
 

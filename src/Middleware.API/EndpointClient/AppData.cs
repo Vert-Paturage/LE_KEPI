@@ -1,4 +1,4 @@
-namespace Middleware.API.Objects;
+namespace Middleware.API.EndpointClient;
 
 public sealed class AppData
 {
