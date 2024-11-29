@@ -24,12 +24,4 @@ public sealed class AppEndpoint
         QueryParams = endpoint.QueryParams;
         Body = endpoint.Body ?? "{}";
     }
-
-    public override string ToString()
-    {
-        string param = "null";
-        if (QueryParams is not null)
-            param = $"[{string.Join(',',QueryParams?.Select(v=>v))}]";
-        return $"- Key : {Key}\n- Endpoint : {Endpoint}\n- Description : {Description}\n- Type : {Type}\n- RouteFormat : {RouteFormat}\n- QueryParams : {param}\n - Body : {Body}";
-    }
 }

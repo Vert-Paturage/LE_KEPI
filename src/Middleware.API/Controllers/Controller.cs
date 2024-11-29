@@ -55,7 +55,7 @@ namespace Middleware.API.Controllers
             IEnumerable<AppData> apps = await _endpointCache.GetRegisteredAppsAsync();
             foreach (AppData app in apps)
             {
-                htmlStringBuilder.Append($"<h1>{app}</h1>");
+                htmlStringBuilder.Append($"<h1>{app.Key} - {app.ApiUrl}</h1>");
                 IEnumerable<AppEndpoint> endpoints = await _endpointCache.GetAppEndpointsAsync(app.Key);
                 htmlStringBuilder.Append("<table border='1'><thead><tr>" +
                                          "<th>Key</th><" +
@@ -75,7 +75,10 @@ namespace Middleware.API.Controllers
                     htmlStringBuilder.Append($"<td>{endpoint.Description}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Type}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.RouteFormat}</td>");
-                    htmlStringBuilder.Append($"<td>{endpoint.QueryParams}</td>");
+                    string param = "[]";
+                    if (endpoint.QueryParams is not null)
+                        param = $"[{string.Join(',',endpoint.QueryParams.Select(v=>v))}]";
+                    htmlStringBuilder.Append($"<td>{param}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Body}</td>");
                     htmlStringBuilder.Append("</tr>");
                 }
