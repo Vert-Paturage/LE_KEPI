@@ -29,11 +29,10 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
     public async Task<ErpRegisterReponse> CallRegisterMethodAsync()
     {
         string url = $"{_middlewareUrl}{REGISTER_ENDPOINT}";
-        HttpContent content = new StringContent(JsonConvert.SerializeObject(new
-        {
-            appKey = _appKey,
-            url = _apiUrl
-        }), Encoding.UTF8, "application/json");
+
+        HttpContent content = new StringContent(
+            JsonConvert.SerializeObject(new ErpRegister(_appKey, _apiUrl)),
+            Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _httpClient.PostAsync(url, content);
         string responseBody = await response.Content.ReadAsStringAsync();
@@ -42,15 +41,13 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
         return JsonConvert.DeserializeObject<ErpRegisterReponse>(responseBody)!;
     }
 
-    public async Task<string> SendActionAsync(string actionKey, Dictionary<string, object>? data=null, object? body = null)
+    public async Task<string> SendActionAsync(string actionKey, Dictionary<string, object>? data = null, object? body = null)
     {
         string url = $"{_middlewareUrl}{ACTION_ENDPOINT}";
-        HttpContent content = new StringContent(JsonConvert.SerializeObject(new
-        {
-            Key = actionKey,
-            Params = data,
-            Body = body
-        }), Encoding.UTF8, "application/json");
+
+        HttpContent content = new StringContent(
+            JsonConvert.SerializeObject(new ErpAction(actionKey, data, body)),
+            Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _httpClient.PostAsync(url, content);
         string responseBody = await response.Content.ReadAsStringAsync();

@@ -57,12 +57,30 @@ namespace Middleware.API.Controllers
             {
                 htmlStringBuilder.Append($"<h1>{app}</h1>");
                 IEnumerable<AppEndpoint> endpoints = await _endpointCache.GetAppEndpointsAsync(app.Key);
-                htmlStringBuilder.Append("<ul>");
+                htmlStringBuilder.Append("<table border='1'><thead><tr>" +
+                                         "<th>Key</th><" +
+                                         "th>Endpoint</th>" +
+                                         "<th>Description</th>" +
+                                         "<th>Type</th>" +
+                                         "<th>RouteFormat</th>" +
+                                         "<th>QueryParams</th>" +
+                                         "<th>Body</th>" +
+                                         "</tr></thead>");
+                htmlStringBuilder.Append("<tbody>");
                 foreach (AppEndpoint endpoint in endpoints)
                 {
-                    htmlStringBuilder.Append($"<li>{endpoint}</li>");
+                    htmlStringBuilder.Append("<tr>");
+                    htmlStringBuilder.Append($"<td>{endpoint.Key}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.Endpoint}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.Description}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.Type}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.RouteFormat}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.QueryParams}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.Body}</td>");
+                    htmlStringBuilder.Append("</tr>");
                 }
-                htmlStringBuilder.Append("</ul>");
+                htmlStringBuilder.Append("</tbody>");
+                htmlStringBuilder.Append("</table>");
             }
             htmlStringBuilder.Append("</html>");
 

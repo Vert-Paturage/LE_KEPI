@@ -9,8 +9,9 @@ public sealed class AppEndpoint
     public string Endpoint { get; }
     public string Description { get; }
     public string Type { get;  }
-    public string? Format { get;  }
-    public string[]? Param { get; }
+    public string? RouteFormat { get;  }
+    public string[]? QueryParams { get; }
+    public string Body { get; }
 
     public AppEndpoint(AppData app, MeuchEndpointInput endpoint)
     {
@@ -19,15 +20,16 @@ public sealed class AppEndpoint
         Endpoint = endpoint.Endpoint;
         Description = endpoint.Description;
         Type = endpoint.Type.ToUpper();
-        Format = endpoint.Format;
-        Param = endpoint.Param;
+        RouteFormat = endpoint.RouteFormat;
+        QueryParams = endpoint.QueryParams;
+        Body = endpoint.Body ?? "{}";
     }
 
     public override string ToString()
     {
         string param = "null";
-        if (Param is not null)
-            param = $"[{string.Join(',',Param?.Select(v=>v))}]";
-        return $"- Key : {Key}\n- Endpoint : {Endpoint}\n- Description : {Description}\n- Type : {Type}\n- Format : {Format}\n- Param : {param}";
+        if (QueryParams is not null)
+            param = $"[{string.Join(',',QueryParams?.Select(v=>v))}]";
+        return $"- Key : {Key}\n- Endpoint : {Endpoint}\n- Description : {Description}\n- Type : {Type}\n- RouteFormat : {RouteFormat}\n- QueryParams : {param}\n - Body : {Body}";
     }
 }

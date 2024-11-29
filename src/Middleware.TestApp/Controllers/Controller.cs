@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Middleware.API.DTO;
 using Middleware.TestApp.Interfaces;
+
+using Newtonsoft.Json;
 
 namespace Middleware.TestApp.Controllers
 {
@@ -96,54 +97,55 @@ namespace Middleware.TestApp.Controllers
         [HttpGet("meuch_map")]
         public IActionResult GetMeuch()
         {
-            List<MeuchEndpointInput> endpoints = new List<MeuchEndpointInput>()
+            List<ErpMeuchEndpoint> endpoints = new List<ErpMeuchEndpoint>()
             {
-                new MeuchEndpointInput()
+                new ErpMeuchEndpoint()
                 {
                     Key = "vak_rsb",
                     Endpoint = "/vak_end",
                     Description = "Get Vak RSB",
                     Type = "get",
-                    Format = "/id/type",
-                    Param = ["date"]
+                    RouteFormat = "/id/type",
+                    QueryParams = ["date"]
                 },
-                new MeuchEndpointInput()
+                new ErpMeuchEndpoint()
                 {
                     Key = "vak_rsb_2",
                     Endpoint = "/vak_end_2",
                     Description = "Get Vak RSB (mais en mieux)",
                     Type = "pOst"
                 },
-                new MeuchEndpointInput()
+                new ErpMeuchEndpoint()
                 {
                     Key = "vaK_RSb_3",
                     Endpoint = "/vak_end_3",
                     Description = "Get Vak RSB (mais en encore mieux)",
                     Type = "PaTcH"
                 },
-                new MeuchEndpointInput()
+                new ErpMeuchEndpoint()
                 {
                     Key = "VAK_CALL_BACK",
                     Endpoint = "/vak_call_back",
                     Description = "Callback pour test",
                     Type = "GET",
-                    Param = ["random"]
+                    QueryParams = ["random"]
                 },
-                new MeuchEndpointInput()
+                new ErpMeuchEndpoint()
                 {
                     Key = "VAK_CALL_BACK_2",
                     Endpoint = "/vak_call_back_2",
                     Description = "Callback pour test v2",
                     Type = "POST"
                 },
-                new MeuchEndpointInput()
+                new ErpMeuchEndpoint()
                 {
                     Key = "VAK_CALL_BACK_3",
                     Endpoint = "/vak_call_back_3",
                     Description = "Callback pour test v3",
                     Type = "PATCH",
-                    Format = "/number1/number2",
-                    Param = ["operation"]
+                    RouteFormat = "/number1/number2",
+                    QueryParams = ["operation"],
+                    Body = JsonConvert.SerializeObject(new VakCallBack2Input())
                 }
             };
             return Ok(endpoints);

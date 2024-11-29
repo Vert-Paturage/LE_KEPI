@@ -76,17 +76,17 @@ public sealed class EndpointHttpClient : IEndpointHttpClient
 
     private string AddRouteValues(string route, AppEndpoint endpoint, Dictionary<string, object> data)
     {
-        if(string.IsNullOrEmpty((endpoint.Format)))
+        if(string.IsNullOrEmpty((endpoint.RouteFormat)))
             return route;
         
-        string trimmedRouteValues = endpoint.Format.Trim('/');
+        string trimmedRouteValues = endpoint.RouteFormat.Trim('/');
         string[] routeParams = trimmedRouteValues.Split('/', StringSplitOptions.TrimEntries);
         route = $"{route.TrimEnd('/')}/{trimmedRouteValues}";
 
         foreach (string routeParam in routeParams) {
             if (data.TryGetValue(routeParam.ToLower(), out object? value) == false)
                 throw new Exception(
-                    $"Route value '{routeParam}' is missing (KEY : {endpoint.Key} - RouteValue : {endpoint.Format})");
+                    $"Route value '{routeParam}' is missing (KEY : {endpoint.Key} - RouteValue : {endpoint.RouteFormat})");
             route = route.Replace(routeParam, value.ToString());
         }
 
@@ -95,15 +95,15 @@ public sealed class EndpointHttpClient : IEndpointHttpClient
 
     private string AddQueryParams(string route, AppEndpoint endpoint, Dictionary<string, object> data)
     {
-        if (endpoint.Param is null || endpoint.Param.Length == 0) 
+        if (endpoint.QueryParams is null || endpoint.QueryParams.Length == 0) 
             return route;
         
         route = $"{route.TrimEnd('/')}?";
 
-        foreach (string queryParam in endpoint.Param) {
+        foreach (string queryParam in endpoint.QueryParams) {
             if (data.TryGetValue(queryParam.ToLower(), out object? value) == false)
                 throw new Exception(
-                    $"Query param '{queryParam}' is missing (KEY : {endpoint.Key} - QueryParam : {string.Join(',', endpoint.Param.Select(v => v))})");
+                    $"Query param '{queryParam}' is missing (KEY : {endpoint.Key} - QueryParam : {string.Join(',', endpoint.QueryParams.Select(v => v))})");
             route += $"{queryParam}={value}&";
         }
         return route.TrimEnd('&');
