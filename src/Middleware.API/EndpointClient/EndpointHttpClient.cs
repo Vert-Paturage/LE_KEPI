@@ -2,31 +2,27 @@
 using System.Text;
 using System.Text.Json;
 using Middleware.API.DTO;
+using Middleware.API.Exceptions;
 using Middleware.API.Interfaces;
 using Newtonsoft.Json;
 
 namespace Middleware.API.EndpointClient;
 
-public sealed class EndpointHttpClient : IEndpointHttpClient
+public sealed class EndpointHttpClient(IHttpClientFactory clientFactory) : IEndpointHttpClient
 {
-    private readonly HttpClient _httpClient;
-
-    public EndpointHttpClient(IHttpClientFactory clientFactory)
-    {
-        _httpClient = clientFactory.CreateClient("HttpClient");
-    }
+    private readonly HttpClient _httpClient = clientFactory.CreateClient("HttpClient");
 
     public async Task<List<AppEndpoint>> CallMeuchMapEndpoint(AppData clientData)
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"{clientData.ApiUrl}/meuch_map");
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"Error when calling {clientData.ApiUrl}/meuch_map");
+            throw new MeuchMapCallException(clientData.ApiUrl, response.ReasonPhrase);
         string responseBody = await response.Content.ReadAsStringAsync();
         List<MeuchEndpointInput>? endpoints = JsonConvert.DeserializeObject<List<MeuchEndpointInput>>(responseBody);
 
         if (endpoints is null)
-            throw new Exception($"Invalid Endpoints format on meuch_map route");
+            throw new InvalidMeuchMapResponseException();
 
         return endpoints.Select(endpoint => new AppEndpoint(clientData, endpoint)).ToList();
     }
@@ -44,10 +40,9 @@ public sealed class EndpointHttpClient : IEndpointHttpClient
 
         if (!response.IsSuccessStatusCode) {
             if (response.StatusCode == HttpStatusCode.NotFound)
-                throw new Exception(
-                    $"Cannot call endpoint '{endpoint.Key}' ({request.RequestUri})");
+                throw new EndpointNotCallableException(endpoint.Key, request.RequestUri?.ToString());
 
-            throw new Exception(responseBody);
+            throw new ProblemException("Exception",responseBody);
         }
 
         return responseBody;
@@ -67,8 +62,7 @@ public sealed class EndpointHttpClient : IEndpointHttpClient
                                      "GET" => HttpMethod.Get,
                                      "POST" => HttpMethod.Post,
                                      "PATCH" => HttpMethod.Patch,
-                                     _ => throw new Exception(
-                                         $"Endpoint type '{endpoint.Type}' invalid ( Key : {endpoint.Key} - App : {endpoint.App.Key})")
+                                     _ => throw new InvalidEndpointMethodType(endpoint)
                                  };
 
         return new HttpRequestMessage(methodeType, route);
@@ -85,8 +79,7 @@ public sealed class EndpointHttpClient : IEndpointHttpClient
 
         foreach (string routeParam in routeParams) {
             if (data.TryGetValue(routeParam.ToLower(), out object? value) == false)
-                throw new Exception(
-                    $"Route value '{routeParam}' is missing (KEY : {endpoint.Key} - RouteValue : {endpoint.RouteFormat})");
+                throw new RouteValueMissingException(routeParam, endpoint);
             route = route.Replace(routeParam, value.ToString());
         }
 
@@ -102,8 +95,7 @@ public sealed class EndpointHttpClient : IEndpointHttpClient
 
         foreach (string queryParam in endpoint.QueryParams) {
             if (data.TryGetValue(queryParam.ToLower(), out object? value) == false)
-                throw new Exception(
-                    $"Query param '{queryParam}' is missing (KEY : {endpoint.Key} - QueryParam : {string.Join(',', endpoint.QueryParams.Select(v => v))})");
+                throw new QueryParamMissingException(queryParam, endpoint);
             route += $"{queryParam}={value}&";
         }
         return route.TrimEnd('&');

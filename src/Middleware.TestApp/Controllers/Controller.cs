@@ -135,7 +135,8 @@ namespace Middleware.TestApp.Controllers
                     Key = "VAK_CALL_BACK_2",
                     Endpoint = "/vak_call_back_2",
                     Description = "Callback pour test v2",
-                    Type = "POST"
+                    Type = "POST",
+                    Body = JsonConvert.SerializeObject(new VakCallBack2Input())
                 },
                 new ErpMeuchEndpoint()
                 {

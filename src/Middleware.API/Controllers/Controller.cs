@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Middleware.API.DTO;
 using Middleware.API.EndpointClient;
+using Middleware.API.Exceptions;
 using Middleware.API.Interfaces;
 
 namespace Middleware.API.Controllers
@@ -39,8 +40,9 @@ namespace Middleware.API.Controllers
         {
             string key = input.Key.ToUpper();
             AppEndpoint? endpoint = await _endpointCache.GetEndpointAsync(key);
+
             if (endpoint is null)
-                return BadRequest($"Endpoint with key {input.Key} not found");
+                throw new ActionNotFoundException(input.Key); 
             
             input.Params ??= new Dictionary<string, object>();
 
