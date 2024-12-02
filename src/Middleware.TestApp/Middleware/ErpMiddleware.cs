@@ -26,7 +26,7 @@ internal sealed class ErpMiddleware(IOptions<ErpMiddlewareOptions> options, IHtt
     private readonly string _appKey = options.Value.AppKey;
     private readonly string _apiUrl = options.Value.ApiUrl;
 
-    public async Task<ErpRegisterReponse> CallRegisterMethodAsync()
+    public async Task<ErpRegisterReponse> CallRegisterAsync()
     {
         string url = $"{_middlewareUrl}{REGISTER_ENDPOINT}";
 

@@ -11,13 +11,16 @@ namespace Middleware.API.Controllers
     [Route("/")]
     public class Controller : ControllerBase
     {
+        private readonly ILogger<Controller> _logger;
         private readonly IEndpointCache _endpointCache;
         private readonly IEndpointHttpClient _endpointHttpClient;
 
         public Controller(
+            ILogger<Controller> logger,
             IEndpointCache endpointCache,
             IEndpointHttpClient endpointHttpClient)
         {
+            _logger = logger;
             _endpointCache = endpointCache;
             _endpointHttpClient = endpointHttpClient;
         }
@@ -25,28 +28,39 @@ namespace Middleware.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterInput input)
         {
+            _logger.LogInformation($"Trying to register app with key \"{input.AppKey}\" and url {input.Url}");
             AppData appData = new AppData(input.AppKey, input.Url);
-            
+
             List<AppEndpoint> endpoints = await _endpointHttpClient.CallMeuchMapEndpoint(appData);
-            
+
             await _endpointCache.RemoveAppEndpointsAsync(appData.Key);
             await _endpointCache.AddEndpointsAsync(endpoints);
 
-            return Ok(new { Actions = endpoints.Select(endpoint => endpoint.Key).ToArray()} );
+            _logger.LogInformation($"Register \"{input.AppKey}\" successfully");
+            return Ok(new { Actions = endpoints.Select(endpoint => endpoint.Key).ToArray() });
         }
 
         [HttpPost("action")]
         public async Task<IActionResult> Action([FromBody] ActionInput input)
         {
+            string queryParams = input.Params == null
+                ? "[]"
+                : $"[{string.Join(",", input.Params.Select(value => value))}]";
+
+            _logger.LogInformation(
+                $"Trying to call action with key \"{input.Key}\", params : {queryParams}, body : {input.Body?.GetRawText()}");
             string key = input.Key.ToUpper();
             AppEndpoint? endpoint = await _endpointCache.GetEndpointAsync(key);
 
             if (endpoint is null)
-                throw new ActionNotFoundException(input.Key); 
-            
+                throw new ActionNotFoundException(input.Key);
+
             input.Params ??= new Dictionary<string, object>();
 
-            return Ok(await _endpointHttpClient.CallEndpoint(endpoint,input.Params, input.Body));
+            string result = await _endpointHttpClient.CallEndpoint(endpoint, input.Params, input.Body);
+
+            _logger.LogInformation($"Action \"{input.Key}\" called successfully");
+            return Ok(result);
         }
 
         [HttpGet("my_swag")]
@@ -79,14 +93,16 @@ namespace Middleware.API.Controllers
                     htmlStringBuilder.Append($"<td>{endpoint.RouteFormat}</td>");
                     string param = "[]";
                     if (endpoint.QueryParams is not null)
-                        param = $"[{string.Join(',',endpoint.QueryParams.Select(v=>v))}]";
+                        param = $"[{string.Join(',', endpoint.QueryParams.Select(v => v))}]";
                     htmlStringBuilder.Append($"<td>{param}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Body}</td>");
                     htmlStringBuilder.Append("</tr>");
                 }
+
                 htmlStringBuilder.Append("</tbody>");
                 htmlStringBuilder.Append("</table>");
             }
+
             htmlStringBuilder.Append("</html>");
 
             string result = htmlStringBuilder.ToString();

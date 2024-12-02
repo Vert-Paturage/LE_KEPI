@@ -24,7 +24,7 @@ namespace Middleware.TestApp.Controllers
         {
             try
             {
-                ErpRegisterReponse reponse = await _middleware.CallRegisterMethodAsync();
+                ErpRegisterReponse reponse = await _middleware.CallRegisterAsync();
                 return Ok(reponse);
             }
             catch (Exception ex)

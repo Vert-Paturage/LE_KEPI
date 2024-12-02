@@ -44,6 +44,6 @@ public sealed record ErpMeuchEndpoint
 
 public interface IErpMiddleware
 {
-    Task<ErpRegisterReponse> CallRegisterMethodAsync();
+    Task<ErpRegisterReponse> CallRegisterAsync();
     Task<string> SendActionAsync(string actionKey, Dictionary<string, object>? data = null, object? body = null);
 }

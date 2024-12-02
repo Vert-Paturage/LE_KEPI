@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Middleware.API.Exceptions.Handlers;
 
-internal class ProblemExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+internal class ProblemExceptionHandler(
+    IProblemDetailsService problemDetailsService, 
+    ILogger<ProblemExceptionHandler> logger
+    ) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
@@ -17,6 +21,8 @@ internal class ProblemExceptionHandler(IProblemDetailsService problemDetailsServ
             Detail = problemException.Message,
             Type = "Bad Request",
         };
+        
+        logger.LogError(JsonConvert.SerializeObject(problemDetails));
 
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         return await problemDetailsService.TryWriteAsync(

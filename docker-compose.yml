@@ -10,4 +10,9 @@ services:
       - 5001:8001      
     environment:
       - ASPNETCORE_HTTP_PORTS=8001
+    volumes:
+      - log-storage:/app/Logs
+        
+volumes:
+  log-storage:
         
