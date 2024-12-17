@@ -7,10 +7,24 @@ using Newtonsoft.Json.Linq;
 
 namespace Middleware.API.Cache;
 
+public sealed record EndpointCacheOptions
+{
+    public string Path { get; set; } = string.Empty;
+}
+
 public sealed class EndpointCache : IEndpointCache
 {
+    private readonly ILogger<EndpointCache> _logger;
+    private readonly string _path;
     private readonly Dictionary<string, AppEndpoint> _cache = [];
 
+    public EndpointCache(IOptions<EndpointCacheOptions> options, ILogger<EndpointCache> logger)
+    {
+        _path = options.Value.Path;
+        _logger = logger;
+        _cache = ReadFromDisk();
+    }
+    
     public Task AddEndpointAsync(AppEndpoint endpointInput)
     {
         _cache[endpointInput.Key] = endpointInput;
@@ -69,7 +83,7 @@ public sealed class EndpointCache : IEndpointCache
         Dictionary<string, AppEndpoint> meuch = [];
         try
         {
-            var value = File.ReadAllText(_path);
+            string value = File.ReadAllText(_path);
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 Converters = [new AppEndpointJsonConvert()],
