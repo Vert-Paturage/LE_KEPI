@@ -23,6 +23,7 @@ public static class DependencyInjection
             );
 
         services.Configure<EndpointCacheOptions>(options => { options.Path = config["CacheFile"]!; });
+
         services.AddSingleton<IEndpointCache, EndpointCache>();
         services.AddScoped<IEndpointHttpClient, EndpointHttpClient>();
     }

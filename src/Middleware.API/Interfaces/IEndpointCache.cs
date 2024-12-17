@@ -12,5 +12,4 @@ public interface IEndpointCache
     Task<IEnumerable<AppEndpoint>> GetAppEndpointsAsync(string appKey);
     Task<IEnumerable<AppEndpoint>> GetEndpointsAsync();
     Task<IEnumerable<AppData>> GetRegisteredAppsAsync();
-    public void SaveToDisk();
 }

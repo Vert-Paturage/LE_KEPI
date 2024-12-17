@@ -35,8 +35,6 @@ namespace Middleware.API.Controllers
 
             await _endpointCache.RemoveAppEndpointsAsync(appData.Key);
             await _endpointCache.AddEndpointsAsync(endpoints);
-            
-            _endpointCache.SaveToDisk();
 
             _logger.LogInformation($"Register \"{input.AppKey}\" successfully");
             return Ok(new { Actions = endpoints.Select(endpoint => endpoint.Key).ToArray() });
@@ -70,6 +68,7 @@ namespace Middleware.API.Controllers
         {
             StringBuilder htmlStringBuilder = new StringBuilder();
             htmlStringBuilder.Append("<html>");
+            htmlStringBuilder.Append("<meta charset=\"UTF-8\">");
             IEnumerable<AppData> apps = await _endpointCache.GetRegisteredAppsAsync();
             foreach (AppData app in apps)
             {

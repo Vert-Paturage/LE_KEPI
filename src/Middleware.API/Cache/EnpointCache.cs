@@ -7,23 +7,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Middleware.API.Cache;
 
-public sealed record EndpointCacheOptions
-{
-    public string Path { get; set; } = string.Empty;
-}
-
 public sealed class EndpointCache : IEndpointCache
 {
     private readonly Dictionary<string, AppEndpoint> _cache = [];
-    private readonly string _path;
-    private readonly ILogger<EndpointCache> _logger;
-
-    public EndpointCache(IOptions<EndpointCacheOptions> options, ILogger<EndpointCache> logger)
-    {
-        _path = options.Value.Path;
-        _logger = logger;
-        _cache = ReadFromDisk();
-    }
 
     public Task AddEndpointAsync(AppEndpoint endpointInput)
     {
