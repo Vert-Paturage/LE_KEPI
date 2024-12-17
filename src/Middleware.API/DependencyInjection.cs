@@ -22,6 +22,10 @@ public static class DependencyInjection
                 }
             );
         
+        services.Configure<EndpointCacheOptions>(options =>
+        {
+            options.Path = "meuch.cache";
+        });
         services.AddSingleton<IEndpointCache, EndpointCache>();
         services.AddScoped<IEndpointHttpClient, EndpointHttpClient>();
     }
