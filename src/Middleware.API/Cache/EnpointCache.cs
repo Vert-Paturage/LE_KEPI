@@ -1,28 +1,11 @@
-using System.Runtime.InteropServices.JavaScript;
-using Microsoft.Extensions.Options;
 using Middleware.API.EndpointClient;
 using Middleware.API.Interfaces;
-using Newtonsoft.Json;
 
 namespace Middleware.API.Cache;
-
-public sealed record EndpointCacheOptions
-{
-    public string Path { get; set; } = string.Empty;
-}
 
 public sealed class EndpointCache : IEndpointCache
 {
     private readonly Dictionary<string, AppEndpoint> _cache = [];
-    private readonly string _path;
-    private readonly ILogger<EndpointCache> _logger;
-
-    public EndpointCache(IOptions<EndpointCacheOptions> options, ILogger<EndpointCache> logger)
-    {
-        _path = options.Value.Path;
-        _logger = logger;
-        _cache = ReadFromDisk();
-    }
 
     public Task AddEndpointAsync(AppEndpoint endpointInput)
     {
@@ -73,28 +56,5 @@ public sealed class EndpointCache : IEndpointCache
     public Task<IEnumerable<AppData>> GetRegisteredAppsAsync()
     {
         return Task.FromResult(_cache.Values.Select(endpoint => endpoint.App).Distinct());
-    }
-
-    private Dictionary<string,AppEndpoint> ReadFromDisk()
-    {
-        Dictionary<string, AppEndpoint> meuch = [];
-        try
-        {
-            var value = File.ReadAllText(_path);
-            meuch = JsonConvert.DeserializeObject<Dictionary<string, AppEndpoint>>(value)!;
-        }
-        catch (FileNotFoundException)
-        {
-             
-            _logger.LogWarning("Failed to read endpoint cache");
-        }
-        
-        return meuch;
-    }
-
-    public void SaveToDisk()
-    {
-        var miam = JsonConvert.SerializeObject(_cache);
-        File.WriteAllText(_path, miam);
     }
 }

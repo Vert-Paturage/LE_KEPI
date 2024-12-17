@@ -35,8 +35,6 @@ namespace Middleware.API.Controllers
 
             await _endpointCache.RemoveAppEndpointsAsync(appData.Key);
             await _endpointCache.AddEndpointsAsync(endpoints);
-            
-            _endpointCache.SaveToDisk();
 
             _logger.LogInformation($"Register \"{input.AppKey}\" successfully");
             return Ok(new { Actions = endpoints.Select(endpoint => endpoint.Key).ToArray() });
