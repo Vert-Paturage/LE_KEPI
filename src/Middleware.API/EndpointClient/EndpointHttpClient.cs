@@ -62,6 +62,7 @@ public sealed class EndpointHttpClient(IHttpClientFactory clientFactory) : IEndp
                                      "GET" => HttpMethod.Get,
                                      "POST" => HttpMethod.Post,
                                      "PATCH" => HttpMethod.Patch,
+                                     "DELETE" => HttpMethod.Delete,
                                      _ => throw new InvalidEndpointMethodType(endpoint)
                                  };
 

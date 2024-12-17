@@ -10,10 +10,10 @@ namespace Middleware.API;
 
 public static class DependencyInjection
 {
-    public static void SetupDependencies(this IServiceCollection services, bool ignoreSsl)
+    public static void SetupDependencies(this IServiceCollection services, IConfiguration config)
     {
         IHttpClientBuilder httpClientBuilder = services.AddHttpClient("HttpClient");
-        if (ignoreSsl)
+        if (config.GetValue<bool>("IgnoreSSL"))
             httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
                 new HttpClientHandler()
                 {
@@ -21,7 +21,9 @@ public static class DependencyInjection
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 }
             );
-        
+
+        services.Configure<EndpointCacheOptions>(options => { options.Path = config["CacheFile"]!; });
+
         services.AddSingleton<IEndpointCache, EndpointCache>();
         services.AddScoped<IEndpointHttpClient, EndpointHttpClient>();
     }
