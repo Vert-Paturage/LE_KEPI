@@ -64,7 +64,7 @@ namespace Middleware.API.Controllers
         }
 
         [HttpGet("my_swag")]
-        public async Task<IActionResult> MySwag()
+        public async Task<ContentResult> MySwag()
         {
             StringBuilder htmlStringBuilder = new StringBuilder();
             htmlStringBuilder.Append("<html>");
@@ -107,7 +107,11 @@ namespace Middleware.API.Controllers
 
             string result = htmlStringBuilder.ToString();
             htmlStringBuilder.Clear();
-            return Ok(result);
+            return new ContentResult()
+            {
+                Content = result,
+                ContentType = "text/html"
+            };
         }
     }
 }
