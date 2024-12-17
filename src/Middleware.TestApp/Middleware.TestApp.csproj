@@ -10,4 +10,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\..\Dockerfile_testapp">
+      <Link>Dockerfile_testapp</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@ namespace Middleware.API
 
             // Add services to the container.
             builder.Services.AddControllers();
-            builder.Services.SetupDependencies(builder.Configuration.GetValue<bool>("IgnoreSSL"));
+            builder.Services.SetupDependencies(builder.Configuration);
 
             builder.Services.AddProblemHandler();
             builder.AddLogging();
