@@ -63,7 +63,7 @@ Chaque action dans la réponse de l'endpoint doit suivre la structure suivante :
   "description" : "Endpoint de test", // petite description qui sera utilisée pour la documentation
   "type" : "GET", // type de la requête HTTP
   "routeFormat" : "/id/type" | null, // paramètres dans l'URL
-  "queryParams" : "[date]" | null, // query params
+  "queryParams" : ["date"] | null, // query params
   "body" : "{}" | null // structure du body
 }
 ```
