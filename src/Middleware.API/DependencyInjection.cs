@@ -45,11 +45,11 @@ public static class DependencyInjection
         services.AddExceptionHandler<ProblemExceptionHandler>();
     }
 
-    public static void AddLogging(this WebApplicationBuilder builder)
+    public static void AddLogging(this WebApplicationBuilder builder, IConfiguration config)
     {
         var logger = new LoggerConfiguration()
             .WriteTo.File(
-                "./Logs/Serilog.log",
+                config["LogPath"]!,
                 rollingInterval: RollingInterval.Hour,
                 rollOnFileSizeLimit: true,
                 outputTemplate:"[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {CorrelationId} {Level:u3}] {Username} {Message:lj}{NewLine}{Exception}")

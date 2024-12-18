@@ -11,7 +11,7 @@ namespace Middleware.API
             builder.Services.SetupDependencies(builder.Configuration);
 
             builder.Services.AddProblemHandler();
-            builder.AddLogging();
+            builder.AddLogging(builder.Configuration);
             
             var app = builder.Build();
 
