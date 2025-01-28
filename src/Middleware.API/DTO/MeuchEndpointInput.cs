@@ -11,4 +11,5 @@ public sealed class MeuchEndpointInput
     public string? RouteFormat { get; init; }
     public string[]? QueryParams { get; init; }
     public string? Body { get; init; }
+    public string? Response { get; init; }
 }

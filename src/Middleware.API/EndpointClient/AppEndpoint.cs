@@ -12,6 +12,7 @@ public sealed class AppEndpoint
     public string? RouteFormat { get;  }
     public string[]? QueryParams { get; }
     public string Body { get; }
+    public string Response { get; }
 
     public AppEndpoint(AppData app, MeuchEndpointInput endpoint)
     {
@@ -23,5 +24,6 @@ public sealed class AppEndpoint
         RouteFormat = endpoint.RouteFormat;
         QueryParams = endpoint.QueryParams;
         Body = endpoint.Body ?? "{}";
+        Response = endpoint.Response ?? "{}";
     }
 }

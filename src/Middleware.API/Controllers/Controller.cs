@@ -84,6 +84,7 @@ namespace Middleware.API.Controllers
                                          "<th>RouteFormat</th>" +
                                          "<th>QueryParams</th>" +
                                          "<th>Body</th>" +
+                                         "<th>Response</th>" +
                                          "</tr></thead>");
                 htmlStringBuilder.Append("<tbody>");
                 foreach (AppEndpoint endpoint in endpoints)
@@ -99,6 +100,7 @@ namespace Middleware.API.Controllers
                         param = $"[{string.Join(',', endpoint.QueryParams.Select(v => v))}]";
                     htmlStringBuilder.Append($"<td>{param}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Body}</td>");
+                    htmlStringBuilder.Append($"<td>{endpoint.Response}</td>");
                     htmlStringBuilder.Append("</tr>");
                 }
 

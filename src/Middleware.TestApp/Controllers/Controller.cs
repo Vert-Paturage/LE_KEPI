@@ -146,7 +146,8 @@ namespace Middleware.TestApp.Controllers
                     Type = "PATCH",
                     RouteFormat = "/number1/number2",
                     QueryParams = ["operation"],
-                    Body = JsonConvert.SerializeObject(new VakCallBack2Input())
+                    Body = JsonConvert.SerializeObject(new VakCallBack2Input(), Formatting.Indented),
+                    Response = JsonConvert.SerializeObject(new VakCallBack3Output(), Formatting.Indented)
                 }
             };
             return Ok(endpoints);
@@ -179,6 +180,17 @@ namespace Middleware.TestApp.Controllers
             public VakCallBackOperation Operation { get; set; }
         }
 
+        public sealed class VakCallBack3Output
+        {
+            public sealed class TestNestedClass
+            {
+                public int Id { get; set; } 
+            }
+            public string RouteValue { get; set; } = string.Empty;
+            public string BodyValue { get; set; } = string.Empty;
+            public TestNestedClass TestClass { get; set; } = new();
+        }
+
         public enum VakCallBackOperation
         {
             Plus,
@@ -196,7 +208,11 @@ namespace Middleware.TestApp.Controllers
         [HttpPatch("vak_call_back_3/{number1}/{number2}")]
         public IActionResult GetVakCallBack3(int number1, int number2, VakCallBackOperation operation, [FromBody] VakCallBack2Input input)
         {
-            return Ok($"Route Values : {Compute(number1, number2, operation)} \nBody Values : {Compute(input.Number1, input.Number2, input.Operation)}");
+            return Ok(new VakCallBack3Output()
+            {
+                RouteValue = Compute(number1, number2, operation),
+                BodyValue = Compute(input.Number1, input.Number2, input.Operation)
+            });
         }
 
         private string Compute(int number1, int number2, VakCallBackOperation operation)

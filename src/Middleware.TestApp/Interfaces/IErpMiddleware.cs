@@ -40,6 +40,7 @@ public sealed record ErpMeuchEndpoint
     public string? RouteFormat { get; init; }
     public string[]? QueryParams { get; init; }
     public string? Body { get; init; }
+    public string? Response { get; init; }
 }
 
 public interface IErpMiddleware
