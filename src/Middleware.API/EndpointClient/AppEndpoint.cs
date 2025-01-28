@@ -1,29 +1,60 @@
+using System.Text.RegularExpressions;
 using Middleware.API.DTO;
 
 namespace Middleware.API.EndpointClient;
 
-public sealed class AppEndpoint
+public enum UrlParamType
 {
-    public AppData App { get; }
-    public string Key { get; }
-    public string Endpoint { get; }
-    public string Description { get; }
-    public string Type { get;  }
-    public string? RouteFormat { get;  }
-    public string[]? QueryParams { get; }
-    public string Body { get; }
-    public string Response { get; }
+    Route,
+    Query
+}
+    
+public sealed record UrlParam(string Name, string ValueType, UrlParamType Type);
 
-    public AppEndpoint(AppData app, MeuchEndpointInput endpoint)
+public sealed partial class AppEndpoint(AppData app, MeuchEndpointInput endpoint)
+{
+    public AppData App { get; } = app;
+    public string Key { get; } = endpoint.Key.ToUpper();
+    public string Endpoint { get; } = endpoint.Endpoint;
+    public string Description { get; } = endpoint.Description;
+    public string Type { get;  } = endpoint.Type.ToUpper();
+
+    public UrlParam[] Params { get;  } = UrlParamParser.Parse(endpoint.Endpoint).ToArray();
+    public string Body { get; } = endpoint.Body ?? "{}";
+    public string Response { get; } = endpoint.Response ?? "{}";
+    
+    private static partial class UrlParamParser
     {
-        App = app;
-        Key = endpoint.Key.ToUpper();
-        Endpoint = endpoint.Endpoint;
-        Description = endpoint.Description;
-        Type = endpoint.Type.ToUpper();
-        RouteFormat = endpoint.RouteFormat;
-        QueryParams = endpoint.QueryParams;
-        Body = endpoint.Body ?? "{}";
-        Response = endpoint.Response ?? "{}";
+        private const string PATTERN = @"\{([^{}:]+)(?::([^{}]+))?\}"; 
+        
+        public static List<UrlParam> Parse(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return [];
+            
+            List<UrlParam> urlParams = [];
+            
+            int questionMarkIndex = url.IndexOf('?');
+            if (questionMarkIndex < 0)
+                questionMarkIndex = url.Length;
+            
+            Regex regex = MyRegex();
+            MatchCollection matches = regex.Matches(url);
+            
+            foreach (Match match in matches) {
+                string valueType = match.Groups[2].Value;
+                if (string.IsNullOrWhiteSpace(valueType))
+                    valueType = "??";
+                urlParams.Add(new UrlParam(
+                    match.Groups[1].Value,
+                    valueType,
+                    match.Index < questionMarkIndex ? UrlParamType.Route : UrlParamType.Query
+                ));
+            }
+
+            return urlParams;
+        }
+
+        [GeneratedRegex(PATTERN)]
+        private static partial Regex MyRegex();
     }
 }

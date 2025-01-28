@@ -77,12 +77,10 @@ namespace Middleware.API.Controllers
                 htmlStringBuilder.Append($"<h1>{app.Key} - {app.ApiUrl}</h1>");
                 IEnumerable<AppEndpoint> endpoints = await _endpointCache.GetAppEndpointsAsync(app.Key);
                 htmlStringBuilder.Append("<table border='1'><thead><tr>" +
-                                         "<th>Key</th><" +
-                                         "th>Endpoint</th>" +
+                                         "<th>Key</th>" +
                                          "<th>Description</th>" +
                                          "<th>Type</th>" +
-                                         "<th>RouteFormat</th>" +
-                                         "<th>QueryParams</th>" +
+                                         "<th>Params</th>" +
                                          "<th>Body</th>" +
                                          "<th>Response</th>" +
                                          "</tr></thead>");
@@ -91,13 +89,13 @@ namespace Middleware.API.Controllers
                 {
                     htmlStringBuilder.Append("<tr>");
                     htmlStringBuilder.Append($"<td>{endpoint.Key}</td>");
-                    htmlStringBuilder.Append($"<td>{endpoint.Endpoint}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Description}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Type}</td>");
-                    htmlStringBuilder.Append($"<td>{endpoint.RouteFormat}</td>");
+                    
                     string param = "[]";
-                    if (endpoint.QueryParams is not null)
-                        param = $"[{string.Join(',', endpoint.QueryParams.Select(v => v))}]";
+                    if(endpoint.Params.Length > 0)
+                        param = $"[{string.Join(", ", endpoint.Params.Select(v => $"{v.Name}:{v.ValueType}"))}]";
+                    
                     htmlStringBuilder.Append($"<td>{param}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Body}</td>");
                     htmlStringBuilder.Append($"<td>{endpoint.Response}</td>");

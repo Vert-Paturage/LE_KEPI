@@ -53,7 +53,11 @@ public sealed class EndpointHttpClient(IHttpClientFactory clientFactory) : IEndp
     {
         data = LowerDataKeys(data);
         string route = $"{endpoint.App.ApiUrl.TrimEnd('/')}/{endpoint.Endpoint.TrimStart('/')}";
-
+        
+        // TODO : problem with the route 
+        // route = https://localhost:7204/vak_call_back_3/{number1:int}/{number2:int}?{operation:int}
+        // change the way to add the route values and query params
+        
         route = AddRouteValues(route, endpoint, data);
         route = AddQueryParams(route, endpoint, data);
 
@@ -71,17 +75,17 @@ public sealed class EndpointHttpClient(IHttpClientFactory clientFactory) : IEndp
 
     private string AddRouteValues(string route, AppEndpoint endpoint, Dictionary<string, object> data)
     {
-        if(string.IsNullOrEmpty((endpoint.RouteFormat)))
+        UrlParam[] routeParams
+            = endpoint.Params.Where(p => p.Type == UrlParamType.Route).ToArray();
+        if(routeParams.Length == 0)
             return route;
         
-        string trimmedRouteValues = endpoint.RouteFormat.Trim('/');
-        string[] routeParams = trimmedRouteValues.Split('/', StringSplitOptions.TrimEntries);
-        route = $"{route.TrimEnd('/')}/{trimmedRouteValues}";
-
-        foreach (string routeParam in routeParams) {
-            if (data.TryGetValue(routeParam.ToLower(), out object? value) == false)
-                throw new RouteValueMissingException(routeParam, endpoint);
-            route = route.Replace(routeParam, value.ToString());
+        route = route.TrimEnd('/');
+        
+        foreach (UrlParam routeParam in routeParams) {
+            if (data.TryGetValue(routeParam.Name.ToLower(), out object? value) == false)
+                throw new ParamMissingException(routeParam.Name, endpoint);
+            route += $"/{value}";
         }
 
         return route;
@@ -89,20 +93,22 @@ public sealed class EndpointHttpClient(IHttpClientFactory clientFactory) : IEndp
 
     private string AddQueryParams(string route, AppEndpoint endpoint, Dictionary<string, object> data)
     {
-        if (endpoint.QueryParams is null || endpoint.QueryParams.Length == 0) 
+        UrlParam[] queryParams
+            = endpoint.Params.Where(p => p.Type == UrlParamType.Query).ToArray();
+        if (queryParams.Length == 0) 
             return route;
         
         route = $"{route.TrimEnd('/')}?";
 
-        foreach (string queryParam in endpoint.QueryParams) {
-            if (data.TryGetValue(queryParam.ToLower(), out object? value) == false)
-                throw new QueryParamMissingException(queryParam, endpoint);
+        foreach (UrlParam queryParam in queryParams) {
+            if (data.TryGetValue(queryParam.Name.ToLower(), out object? value) == false)
+                throw new ParamMissingException(queryParam.Name, endpoint);
             route += $"{queryParam}={value}&";
         }
         return route.TrimEnd('&');
     }
 
-    private Dictionary<string, object> LowerDataKeys(Dictionary<string, object> data)
+    private static Dictionary<string, object> LowerDataKeys(Dictionary<string, object> data)
     {
         Dictionary<string, object> result = new();
 

@@ -102,33 +102,25 @@ namespace Middleware.TestApp.Controllers
                 new ErpMeuchEndpoint()
                 {
                     Key = "vak_rsb",
-                    Endpoint = "/vak_end",
+                    Endpoint = "/vak_end/{id:int}/{type:string}?{date:dateonly}",
                     Description = "Get Vak RSB",
                     Type = "get",
-                    RouteFormat = "/id/type",
-                    QueryParams = ["date"]
+                    Response = "string"
                 },
                 new ErpMeuchEndpoint()
                 {
                     Key = "vak_rsb_2",
                     Endpoint = "/vak_end_2",
                     Description = "Get Vak RSB (mais en mieux)",
-                    Type = "pOst"
-                },
-                new ErpMeuchEndpoint()
-                {
-                    Key = "vaK_RSb_3",
-                    Endpoint = "/vak_end_3",
-                    Description = "Get Vak RSB (mais en encore mieux)",
-                    Type = "PaTcH"
+                    Type = "pOst",
+                    Response = "string"
                 },
                 new ErpMeuchEndpoint()
                 {
                     Key = "VAK_CALL_BACK",
-                    Endpoint = "/vak_call_back",
+                    Endpoint = "/vak_call_back?{random}&{}",
                     Description = "Callback pour test",
                     Type = "GET",
-                    QueryParams = ["random"],
                     Response = "string"
                 },
                 new ErpMeuchEndpoint()
@@ -143,11 +135,9 @@ namespace Middleware.TestApp.Controllers
                 new ErpMeuchEndpoint()
                 {
                     Key = "VAK_CALL_BACK_3",
-                    Endpoint = "/vak_call_back_3",
+                    Endpoint = "/vak_call_back_3/{number1:int}/{number2:int}?{operation:int}",
                     Description = "Callback pour test v3",
                     Type = "PATCH",
-                    RouteFormat = "/number1/number2",
-                    QueryParams = ["operation"],
                     Body = JsonConvert.SerializeObject(new VakCallBack2Input(), Formatting.Indented),
                     Response = JsonConvert.SerializeObject(new VakCallBack3Output(), Formatting.Indented)
                 }

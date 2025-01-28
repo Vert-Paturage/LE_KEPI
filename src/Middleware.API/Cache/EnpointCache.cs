@@ -126,10 +126,6 @@ public sealed class EndpointCache : IEndpointCache
             writer.WriteValue(value.Description);
             writer.WritePropertyName("type");
             writer.WriteValue(value.Type);
-            writer.WritePropertyName("route_format");
-            writer.WriteValue(value.RouteFormat);
-            writer.WritePropertyName("query_params");
-            writer.WriteValue(JsonConvert.SerializeObject(value.QueryParams));
             writer.WritePropertyName("body");
             writer.WriteValue(value.Body);
             writer.WritePropertyName("response");
@@ -148,8 +144,6 @@ public sealed class EndpointCache : IEndpointCache
                 Endpoint = jsonObject["endpoint"]?.ToString()!,
                 Description = jsonObject["description"]?.ToString()!,
                 Type = jsonObject["type"]?.ToString()!,
-                RouteFormat = jsonObject["route_format"]?.ToString()!,
-                QueryParams = JsonConvert.DeserializeObject<string[]>(jsonObject["query_params"]?.ToString()!),
                 Body = jsonObject["body"]?.ToString()!,
                 Response = jsonObject["response"]?.ToString()!
             };
