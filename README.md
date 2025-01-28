@@ -32,19 +32,19 @@ Le middleware propose 3 endpoints :
 - `register` : permet à une application de s'enregistrer auprès du middleware.
 ```js
 {
-  "appKey": "APP1", // identifiant unique de chaque application
-  "url": "https://ip_application:port" // URL de l'application
+    "appKey": "APP1", // identifiant unique de chaque application
+    "url": "https://ip_application:port" // URL de l'application
 }
 ```
 
 - `action` : permet à une application de demander au middleware d'exécuter une action.
 ```js
 {
-  "key": "APP1_GET_ALL_USERS", // code de l'action
-  "params": {
-    "date": "2021-01-01"
-  } | null, // paramètres d'URL et query params
-  "body": {} | null // corps de la requête si besoin
+    "key": "APP1_GET_ALL_USERS", // code de l'action
+    "params": {
+        "date": "2021-01-01"
+    } | null, // paramètres d'URL et query params
+    "body": {} | null // corps de la requête si besoin
 }
 ```
 
@@ -58,13 +58,14 @@ retourne la liste des actions qu'elle propose.
 Chaque action dans la réponse de l'endpoint doit suivre la structure suivante :
 ```js
 {
-  "key": "APP1_GET_TEST", // code de l'action
-  "endpoint" : "/test_endpoint", // endpoint de l'action depuis la racine
-  "description" : "Endpoint de test", // petite description qui sera utilisée pour la documentation
-  "type" : "GET", // type de la requête HTTP
-  "routeFormat" : "/id/type" | null, // paramètres dans l'URL
-  "queryParams" : ["date"] | null, // query params
-  "body" : "{}" | null // structure du body
+    "key": "APP1_GET_TEST", // code de l'action
+    "endpoint" : "/test_endpoint", // endpoint de l'action depuis la racine
+    "description" : "Endpoint de test", // petite description qui sera utilisée pour la documentation
+    "type" : "GET", // type de la requête HTTP
+    "routeFormat" : "/id/type" | null, // paramètres dans l'URL
+    "queryParams" : ["date"] | null, // query params
+    "body" : "{}" | null, // structure du body
+    "response" : "{}" | null // structure de la réponse
 }
 ```
 
@@ -91,14 +92,16 @@ public IActionResult GetMeuch()
             Description = "Endpoint de test",
             Type = "GET",
             RouteFormat = "/id/type",
-            QueryParams = ["date"]
+            QueryParams = ["date"],
+            Response = "string"
         },
         new MeuchEndpointInput()
         {
             Key = "APP1_CREATE",
             Endpoint = "/create_user",
             Description = "Créer un utilisateur",
-            Type = "POST"
+            Type = "POST",
+            Response = JsonConvert.SerializeObject(new CreateUserResponse(), Formatting.Indented),
         }
     };
     return Ok(endpoints);
@@ -113,7 +116,17 @@ public IActionResult TestEndpoint(int id, string type, string date)
 [HttpPost("create_user")]
 public IActionResult CreateUser(CreateUserInput input)
 {
-    return Ok($"User created with name {input.Name}");
+    return Ok(new CreateUserResponse()
+    {
+        Id = 1,
+        Name = input.Name
+    });    
+}
+
+internal sealed class CreateUserResponse
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 ```
 

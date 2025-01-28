@@ -128,7 +128,8 @@ namespace Middleware.TestApp.Controllers
                     Endpoint = "/vak_call_back",
                     Description = "Callback pour test",
                     Type = "GET",
-                    QueryParams = ["random"]
+                    QueryParams = ["random"],
+                    Response = "string"
                 },
                 new ErpMeuchEndpoint()
                 {
@@ -136,7 +137,8 @@ namespace Middleware.TestApp.Controllers
                     Endpoint = "/vak_call_back_2",
                     Description = "Callback pour test v2",
                     Type = "POST",
-                    Body = JsonConvert.SerializeObject(new VakCallBack2Input())
+                    Body = JsonConvert.SerializeObject(new VakCallBack2Input()),
+                    Response = "string"
                 },
                 new ErpMeuchEndpoint()
                 {

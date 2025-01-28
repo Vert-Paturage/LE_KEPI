@@ -16,7 +16,7 @@ public sealed class EndpointCache : IEndpointCache
 {
     private readonly ILogger<EndpointCache> _logger;
     private readonly string _path;
-    private readonly Dictionary<string, AppEndpoint> _cache = [];
+    private readonly Dictionary<string, AppEndpoint> _cache;
 
     public EndpointCache(IOptions<EndpointCacheOptions> options, ILogger<EndpointCache> logger)
     {
@@ -132,6 +132,8 @@ public sealed class EndpointCache : IEndpointCache
             writer.WriteValue(JsonConvert.SerializeObject(value.QueryParams));
             writer.WritePropertyName("body");
             writer.WriteValue(value.Body);
+            writer.WritePropertyName("response");
+            writer.WriteValue(value.Response);
             writer.WriteEndObject();
         }
 
@@ -148,7 +150,8 @@ public sealed class EndpointCache : IEndpointCache
                 Type = jsonObject["type"]?.ToString()!,
                 RouteFormat = jsonObject["route_format"]?.ToString()!,
                 QueryParams = JsonConvert.DeserializeObject<string[]>(jsonObject["query_params"]?.ToString()!),
-                Body = jsonObject["body"]?.ToString()!
+                Body = jsonObject["body"]?.ToString()!,
+                Response = jsonObject["response"]?.ToString()!
             };
             
             AppData app = new AppData(jsonObject["app_key"]?.ToString()!, jsonObject["app_url"]?.ToString()!);
