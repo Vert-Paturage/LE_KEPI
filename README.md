@@ -185,7 +185,7 @@ Ports :
 
 # Membre du projet
 - Romain REYDEL 👑
-- Derya AY 🌛
+- Derya AY 🫶🏼
 - Paul CHOPINET 😔
 - Florian SPINDLER 😽
 - Arthur VILLARD 🏐
