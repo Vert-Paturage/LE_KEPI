@@ -180,11 +180,11 @@ Ports :
 
  On a fait en sorte que ce middleware soit à la fois souple, modulable et surtout évolutif, car le monde des applications, c'est comme un jeu de construction : on ajoute, on retire, on réajuste, et tout ça doit continuer à fonctionner sans accroc. On n’a pas juste codé une solution, on a codé la confiance entre des briques technologiques qui n’ont rien en commun, si ce n’est qu’elles veulent coopérer.
 
- Donc, oui, ce middleware, c’est notre bébé, et il a une belle vie devant lui. Il est là pour donner de la liberté à chaque module ERP tout en garantissant la stabilité et la fluidité des échanges. Une solution pas seulement technique, mais une nouvelle manière de voir la collaboration entre systèmes. On a posé les fondations, et maintenant, c’est à nous de voir jusqu’où ça peut aller. Et franchement, on est excités de voir l’avenir s’ouvrir à nous.
+ Donc, oui, ce middleware, c’est notre *bébé* 👶, et il a une belle vie devant lui. Il est là pour donner de la liberté à chaque module ERP tout en garantissant la stabilité et la fluidité des échanges. Une solution pas seulement technique, mais une nouvelle manière de voir la collaboration entre systèmes. On a posé les fondations, et maintenant, c’est à nous de voir jusqu’où ça peut aller. Et franchement, on est excités de voir l’avenir s’ouvrir à nous.
 
 
 # Membres du projet
-- Romain REYDEL 👑 (CHEF DE PROJET / DEVELOPPEUR / ARCHITECTE / TESTEUR / INTEGRATEUR / SUPPORT / DELICIEUX / FAÇONNEUR DE FUTUR / MAGICIEN DU CODE / MON CRUSH)
+- Romain REYDEL 👑 (CHEF DE PROJET / DEVELOPPEUR / ARCHITECTE / TESTEUR / INTEGRATEUR / SUPPORT / DELICIEUX / FAÇONNEUR DE FUTUR / MAGICIEN DU CODE / MON CRUSH / MIGNON)
 - Derya AY 💫
 - Paul CHOPINET 😔
 - Florian SPINDLER 😽
