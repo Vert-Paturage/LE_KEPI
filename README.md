@@ -145,4 +145,26 @@ comportement d'une application utilisant le middleware.
 
 [TestApp](src/Middleware.TestApp)
 
+## Exécuter le projet via Docker
 
+Chaque projet (Middleware et TestApp) possède son Dockerfile pour être exécuté dans un conteneur Docker.
+
+2 fichiers Docker compose sont présent dans le repository pour exécuter le projet :
+- docker-compose.yml : pour exécuter uniquement le middleware
+- docker-compose-all.yml : pour exécuter le middleware et l'app de test
+
+#### Exécuter uniquement le middleware
+```bash
+docker compose build
+docker compose up -d
+```
+
+#### Exécuter le middleware + test app
+```bash
+docker compose --file docker-compose-all.yml build
+docker compose --file docker-compose-all.yml up -d
+```
+
+Ports :
+- Middleware : 5000
+- TestApp : 5001

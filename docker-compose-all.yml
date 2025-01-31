@@ -1,0 +1,41 @@
+networks:
+  erp_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.0.0.0/16
+          gateway: 172.0.0.1
+
+services:
+
+  api:
+    container_name: erp_middleware
+    build: .
+    restart: always
+    ports:
+      - 5001:8001
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8001
+    volumes:
+      - app-storage:/app/app_data
+    networks:
+      erp_network:
+        ipv4_address: 172.0.0.2
+
+  testapp:
+    container_name: erp_testapp
+    build:
+      context: .
+      dockerfile: Dockerfile_testapp
+    ports:
+      - 5002:8001
+    environment:
+        - ASPNETCORE_HTTP_PORTS=8001
+    networks:
+      erp_network:
+        ipv4_address: 172.0.0.3
+    depends_on:
+      - api
+
+volumes:
+  app-storage:
