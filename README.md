@@ -1,3 +1,5 @@
+# GROUPE I - Intégration
+
 # Middleware
 
 ## Description
@@ -168,3 +170,8 @@ docker compose --file docker-compose-all.yml up -d
 Ports :
 - Middleware : 5000
 - TestApp : 5001
+
+
+
+# Conclusion
+
