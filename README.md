@@ -184,7 +184,7 @@ Ports :
 
 
 # Membres du projet
-- Romain REYDEL 👑
+- Romain REYDEL 👑 (CHEF DE PROJET / DEVELOPPEUR / ARCHITECTE / TESTEUR / INTEGRATEUR / SUPPORT)
 - Derya AY 💫
 - Paul CHOPINET 😔
 - Florian SPINDLER 😽
