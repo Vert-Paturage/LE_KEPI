@@ -174,13 +174,13 @@ Ports :
 
 
 # Conclusion
- Nous, le groupe I, avons implémenté le middleware pour l'intégration au sein de l'ERP. Ce middleware joue le rôle d'intermédiaire entre différentes applications, permettant à une application de récupérer des données d'une autre application sans avoir à connaître sa structure interne.
+ Nous, le groupe **I**, avons implémenté le middleware pour l'intégration au sein de l'ERP. Ce middleware joue le rôle d'intermédiaire entre différentes applications, permettant à une application de récupérer des données d'une autre application sans avoir à connaître sa structure interne.
 
- Ce middleware n'est pas juste une solution technique, c’est un peu notre manifeste pour un monde plus fluide, plus interconnecté. On l’a conçu pour être l’ossature invisible mais indispensable des modules de l'ERP. En gros, c’est un peu comme un chef d’orchestre, qui fait en sorte que chaque instrument – ou chaque application – joue sa partition sans que l’une vienne perturber l’autre. Et croyez-moi, quand on parle de modules ERP, ça devient vite un ballet complexe de données qui dansent entre systèmes.
+ Ce middleware n'est pas juste une solution technique, c’est un peu notre manifeste pour un monde plus fluide, plus interconnecté. On l’a conçu pour être l’ossature invisible mais indispensable des modules de l'ERP. En **gros**, c’est un peu comme un chef d’orchestre, qui fait en sorte que chaque instrument – ou chaque application – joue sa partition sans que l’une vienne perturber l’autre. Et **croyez-moi**, quand on parle de modules ERP, ça devient vite un **ballet** complexe de données qui dansent entre systèmes.
 
  On a fait en sorte que ce middleware soit à la fois souple, modulable et surtout évolutif, car le monde des applications, c'est comme un jeu de construction : on ajoute, on retire, on réajuste, et tout ça doit continuer à fonctionner sans accroc. On n’a pas juste codé une solution, on a codé la confiance entre des briques technologiques qui n’ont rien en commun, si ce n’est qu’elles veulent coopérer.
 
- Donc, oui, ce middleware, c’est notre *bébé* 👶, et il a une belle vie devant lui. Il est là pour donner de la liberté à chaque module ERP tout en garantissant la stabilité et la fluidité des échanges. Une solution pas seulement technique, mais une nouvelle manière de voir la collaboration entre systèmes. On a posé les fondations, et maintenant, c’est à nous de voir jusqu’où ça peut aller. Et franchement, on est excités de voir l’avenir s’ouvrir à nous.
+ Donc, oui, ce middleware, c’est notre **bébé** 👶, et il a une belle vie devant lui. Il est là pour donner de la liberté à chaque module ERP tout en garantissant la stabilité et la fluidité des échanges. Une solution pas seulement technique, mais une nouvelle manière de voir la collaboration entre systèmes. On a posé les fondations, et maintenant, c’est à nous de voir jusqu’où ça peut aller. Et franchement, on est excités de voir l’avenir s’ouvrir à nous.
 
 
 # Membres du projet
