@@ -11,7 +11,7 @@ public sealed class MeuchEndpointInput
     public required string Type { get; init; }
     public string? RouteFormat { get; init; }
     public string[]? QueryParams { get; init; }
-    public string? Body { get; init; }
+    public object? Body { get; init; }
 
     [JsonConverter(typeof(RawJsonConverter))]
     public string? Response { get; init; }

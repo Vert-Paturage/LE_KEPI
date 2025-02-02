@@ -1,4 +1,5 @@
 using Middleware.API.DTO;
+using Newtonsoft.Json;
 
 namespace Middleware.API.EndpointClient;
 
@@ -23,7 +24,7 @@ public sealed class AppEndpoint
         Type = endpoint.Type.ToUpper();
         RouteFormat = endpoint.RouteFormat;
         QueryParams = endpoint.QueryParams;
-        Body = endpoint.Body ?? "{}";
+        Body = JsonConvert.SerializeObject(endpoint.Body) ?? "{}";
         Response = endpoint.Response ?? "{}";
     }
 }
